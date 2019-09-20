@@ -26,7 +26,7 @@ public class TicTacToe extends Application {
 
 	public static final Background BACKGROUND;
 	public static final int PORT = 6336;
-	
+
 	private static String[] args;
 
 	static {
@@ -86,7 +86,7 @@ public class TicTacToe extends Application {
 		// checks if a new game has started
 		if (layout instanceof BorderPane)
 			game.setDisable(false);
-		else {
+		else if (root.getCenter() instanceof BorderPane) {
 			Game.end();
 			net.closeAll();
 			game.getItems().remove(0);
@@ -94,11 +94,11 @@ public class TicTacToe extends Application {
 		}
 		root.setCenter(layout);
 	}
-	
+
 	public Menu getGameMenu() {
 		return game;
 	}
-	
+
 	public Network getNetwork() {
 		return net;
 	}
@@ -112,7 +112,7 @@ public class TicTacToe extends Application {
 		launch(args);
 		System.exit(0);
 	}
-	
+
 	public static String[] getArgs() {
 		return args;
 	}
