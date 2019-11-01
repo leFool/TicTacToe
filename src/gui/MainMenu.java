@@ -38,7 +38,7 @@ public class MainMenu extends VBox {
 		og = new Button("Online Game");
 		String[] args = TicTacToe.getArgs();
 		boolean isOnline = true;
-		for (int i = 0; i < args.length && isOnline; i++)
+		for (int i = 0; (i < args.length) && isOnline; i++)
 			if (args[i].equals("-offline")) {
 				og.setDisable(true);
 				isOnline = false;

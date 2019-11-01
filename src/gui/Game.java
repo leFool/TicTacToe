@@ -303,7 +303,7 @@ public class Game extends GridPane {
 	/**
 	 * Checks the board if the current player has won
 	 * 
-	 * @return {@code true} if the a tie or current player has won and false if
+	 * @return {@code true} if the result is a tie or current player has won and false if
 	 *         not
 	 */
 	private boolean checkBoard() {
@@ -417,7 +417,7 @@ public class Game extends GridPane {
 		Tile best = getThreatedTile();
 		if (best != null)
 			return best;
-		// middle for outmost block
+		// middle for outmost control
 		best = board[1][1];
 		if (best.isEmpty())
 			return best;
