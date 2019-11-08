@@ -86,6 +86,7 @@ public class TicTacToe extends Application {
 		// checks if a new game has started
 		if (layout instanceof BorderPane)
 			game.setDisable(false);
+		// checks if a game eneded
 		else if (root.getCenter() instanceof BorderPane) {
 			Game.end();
 			net.closeAll();

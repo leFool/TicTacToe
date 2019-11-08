@@ -18,13 +18,14 @@ public class WaitingDialog extends Stage {
 	private ProgressIndicator indicator;
 	private Button cancel;
 	private VBox root;
-	
+
 	public WaitingDialog(Network net) {
 		super(StageStyle.UNDECORATED);
 		initModality(Modality.APPLICATION_MODAL);
 		setTitle("Wait for Opponent Dialog");
-		setX(860);
-		setY(443);
+		// setX(860);
+		// setY(443);
+		setPlace();
 		this.net = net;
 		l = new Label("Waiting for opponent...");
 		indicator = new ProgressIndicator(-1);
@@ -36,7 +37,11 @@ public class WaitingDialog extends Stage {
 		setScene(new Scene(root, 200, 110));
 	}
 	
-	public void hide(boolean success) {	
+	private void setPlace() {
+		setY(getY() + 100);
+	}
+
+	public void hide(boolean success) {
 		if (!success)
 			net.closeServer();
 		super.hide();
