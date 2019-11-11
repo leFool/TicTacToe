@@ -122,6 +122,7 @@ public class SettingsChooser extends Settings {
 	}
 
 	public void openDialog() {
+		loadFromFile();
 		load();
 		stage.showAndWait();
 	}
