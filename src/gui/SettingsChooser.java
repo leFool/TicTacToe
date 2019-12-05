@@ -1,6 +1,11 @@
 package gui;
 
+import java.io.IOException;
+
+import core.Message;
+import core.Network;
 import enums.GameDifficulty;
+import enums.MessageType;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
@@ -14,6 +19,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import main.TicTacToe;
 import user.Settings;
 
 public class SettingsChooser extends Settings {
@@ -21,14 +27,20 @@ public class SettingsChooser extends Settings {
 	private static final long serialVersionUID = -6460486954356247550L;
 
 	private transient Button ok, apply, toDefault, cancel;
-	private transient TextField player1TextFiled, player2TextFiled, compTextFiled, onlineTextFiled;
+	private transient TextField player1TextFiled, player2TextFiled, compTextFiled,
+			onlineTextFiled;
 	private transient Label lp1, lp2, lcomp, lo, ldiff, info;
 	private transient ChoiceBox<String> difficulty;
 	private transient GridPane root;
 	private transient Stage stage;
 
-	public SettingsChooser() {
+	private transient TicTacToe main;
+	private transient Network net;
+
+	public SettingsChooser(TicTacToe main) {
 		super();
+		this.main = main;
+		this.net = main.getNetwork();
 		setLabels();
 		setFields();
 		setButtons();
@@ -41,8 +53,9 @@ public class SettingsChooser extends Settings {
 	}
 
 	private void setRoot() {
-		Node[][] childs = { { lp1, player1TextFiled }, { lp2, player2TextFiled }, { lcomp, compTextFiled },
-				{ lo, onlineTextFiled }, { ldiff, difficulty } };
+		Node[][] childs = { { lp1, player1TextFiled }, { lp2, player2TextFiled },
+				{ lcomp, compTextFiled }, { lo, onlineTextFiled },
+				{ ldiff, difficulty } };
 		root = new GridPane();
 		root.setAlignment(Pos.CENTER);
 		root.setHgap(10);
@@ -95,11 +108,21 @@ public class SettingsChooser extends Settings {
 		if (b == ok) {
 			save(true);
 			stage.hide();
+			Game g = Game.getCurrentGame(main);
+			if (g != null)
+				Game.getCurrentGame(main).updateInfo(this);
+			if (net.checkConnection()) {
+				try {
+					net.send(new Message(MessageType.NAME, onlineName));
+				} catch (IOException e1) {
+					net.error("couldn't send online name");
+				}
+			}
 		}
 		else if (b == apply)
 			save(false);
 		else if (b == toDefault) {
-			setToDefault(); 
+			setToDefault();
 			load();
 		}
 		else
@@ -115,7 +138,8 @@ public class SettingsChooser extends Settings {
 	}
 
 	private void save(boolean toFile) {
-		set(player1TextFiled.getText(), player2TextFiled.getText(), compTextFiled.getText(), onlineTextFiled.getText(),
+		set(player1TextFiled.getText(), player2TextFiled.getText(),
+				compTextFiled.getText(), onlineTextFiled.getText(),
 				GameDifficulty.valueOf(difficulty.getValue()));
 		if (toFile)
 			saveToFile();

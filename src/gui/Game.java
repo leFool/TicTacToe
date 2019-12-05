@@ -27,7 +27,7 @@ import user.Settings;
 import vlad.MatrixIndex;
 
 public class Game extends GridPane {
-	
+
 	private final TicTacToe main;
 	private final GameMode MODE;
 	/**
@@ -69,6 +69,15 @@ public class Game extends GridPane {
 		setOpponent();
 	}
 
+	public static Game getCurrentGame(TicTacToe main) {
+		try {
+			BorderPane layout = (BorderPane) main.getLayout();
+			return (Game) layout.getCenter();
+		} catch (ClassCastException e) {
+			return null;
+		}
+	}
+
 	public static void end() {
 		Opponent.setPlaying(false);
 		Tile.resetFilledTilesCounter();
@@ -101,7 +110,8 @@ public class Game extends GridPane {
 	private void setAlerts() {
 		toLobby = new ButtonType("Main Menu");
 		rematch = new ButtonType("Rematch");
-		tieAlert = new Alert(AlertType.INFORMATION, "No one has won the game!", rematch, toLobby);
+		tieAlert = new Alert(AlertType.INFORMATION, "No one has won the game!", rematch,
+				toLobby);
 		tieAlert.setTitle("Game Result");
 		tieAlert.setHeaderText("A Tie");
 		winAlert = new Alert(AlertType.INFORMATION, "Congratulations!", rematch, toLobby);
@@ -135,13 +145,15 @@ public class Game extends GridPane {
 			user = settings;
 		String si;
 		if (MODE == GameMode.VS_COMPUTER) {
-			si = String.format(space + "Round: %d | %s vs. %s | Now Playing: %s | %d:%d | %s", round,
-					user.getPlayer1Name(), user.getComputerName(), currentPlayerName(), wins[0], wins[1],
-					user.getGameDifficulty());
+			si = String.format(
+					space + "Round: %d | %s vs. %s | Now Playing: %s | %d:%d | %s", round,
+					user.getPlayer1Name(), user.getComputerName(), currentPlayerName(),
+					wins[0], wins[1], user.getGameDifficulty());
 		}
 		else {
-			si = String.format(space + "Round: %d | %s vs. %s | Now Playing: %s | %d:%d", round, user.getPlayer1Name(),
-					user.getPlayer2Name(), currentPlayerName(), wins[0], wins[1]);
+			si = String.format(space + "Round: %d | %s vs. %s | Now Playing: %s | %d:%d",
+					round, user.getPlayer1Name(), user.getPlayer2Name(),
+					currentPlayerName(), wins[0], wins[1]);
 		}
 		info.setText(si);
 	}
@@ -201,10 +213,7 @@ public class Game extends GridPane {
 			}
 		}
 		Optional<ButtonType> action;
-		if (!isWin && isEnd)
-			action = tieAlert.showAndWait();
-		else
-			action = win();
+		action = (!isWin && isEnd) ? tieAlert.showAndWait() : win();
 		if (action.get() == rematch) {
 			swapAndReset();
 			if (isOnline())
@@ -303,8 +312,8 @@ public class Game extends GridPane {
 	/**
 	 * Checks the board if the current player has won
 	 * 
-	 * @return {@code true} if the result is a tie or current player has won and false if
-	 *         not
+	 * @return {@code true} if the result is a tie or current player has won and
+	 *         false if not
 	 */
 	private boolean checkBoard() {
 		if (cantLose())
@@ -364,7 +373,8 @@ public class Game extends GridPane {
 	}
 
 	private void switchCurrentPlayer() {
-		currentPlayer = (currentPlayer == Player.PLAYER_1) ? Player.PLAYER_2 : Player.PLAYER_1;
+		currentPlayer = (currentPlayer == Player.PLAYER_1) ? Player.PLAYER_2
+				: Player.PLAYER_1;
 	}
 
 	private Tile getRandomEmptyTile() {

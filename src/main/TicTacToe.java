@@ -28,23 +28,24 @@ public class TicTacToe extends Application {
 	public static final int PORT = 6336;
 
 	private static String[] args;
-
+	
 	static {
 		Stop[] stops = new Stop[] { new Stop(0, Color.WHITE), new Stop(1, Color.BLACK) };
-		LinearGradient lg = new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE, stops);
+		LinearGradient lg = new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE,
+				stops);
 		BackgroundFill bf = new BackgroundFill(lg, CornerRadii.EMPTY, Insets.EMPTY);
 		BACKGROUND = new Background(bf);
 	}
 
 	private SettingsChooser settingsChooser;
 	private BorderPane root;
-	private Menu game;
+	private Menu gameMenu;
 	private Network net;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		net = new Network(this);
-		settingsChooser = new SettingsChooser();
+		settingsChooser = new SettingsChooser(this);
 		root = new BorderPane();
 		addMenuBar();
 		root.setCenter(new MainMenu(this));
@@ -58,13 +59,13 @@ public class TicTacToe extends Application {
 		MenuItem exit = new MenuItem("Exit");
 		MenuItem settings = new MenuItem("Settings");
 		Menu file = new Menu("File", null, re, exit);
-		game = new Menu("Game");
+		gameMenu = new Menu("Game");
 		Menu tools = new Menu("Tools", null, settings);
-		MenuBar bar = new MenuBar(file, game, tools);
+		MenuBar bar = new MenuBar(file, gameMenu, tools);
 		re.setOnAction(e -> restart());
 		exit.setOnAction(e -> exit());
 		settings.setOnAction(e -> settingsChooser.openDialog());
-		game.setDisable(true);
+		gameMenu.setDisable(true);
 		root.setTop(bar);
 	}
 
@@ -85,19 +86,23 @@ public class TicTacToe extends Application {
 	public void setLayout(Node layout) {
 		// checks if a new game has started
 		if (layout instanceof BorderPane)
-			game.setDisable(false);
+			gameMenu.setDisable(false);
 		// checks if a game eneded
 		else if (root.getCenter() instanceof BorderPane) {
 			Game.end();
 			net.closeAll();
-			game.getItems().remove(0);
-			game.setDisable(true);
+			gameMenu.getItems().remove(0);
+			gameMenu.setDisable(true);
 		}
 		root.setCenter(layout);
 	}
 
+	public Node getLayout() {
+		return root.getCenter();
+	}
+
 	public Menu getGameMenu() {
-		return game;
+		return gameMenu;
 	}
 
 	public Network getNetwork() {

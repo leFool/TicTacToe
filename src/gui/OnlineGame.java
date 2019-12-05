@@ -95,11 +95,11 @@ public class OnlineGame extends VBox {
 		try {
 			if (sip.equals("") || sip == null)
 				throw new UnknownHostException();
-			boolean local = Ip.isLocal(sip);
-			if (local && sip.equals(lip))
-				throw new IllegalArgumentException();
-			if (!local && sip.equals(eip))
-				throw new IllegalArgumentException();
+//			boolean local = Ip.isLocal(sip);
+//			if (local && sip.equals(lip))
+//				throw new IllegalArgumentException();
+//			if (!local && sip.equals(eip))
+//				throw new IllegalArgumentException();
 			net.connectToServer(sip);
 			net.openStreams();
 			String onlineName = main.getSettingsChooser().getOnlineName();

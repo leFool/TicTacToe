@@ -12,15 +12,15 @@ public class MainMenu extends VBox {
 	private TicTacToe main;
 	private VBox btns;
 	private StyledLabel wm;
-	private Button pvc, pvp, og, settings, exit;
+	private Button pve, pvp, og, settings, exit;
 
 	public MainMenu(TicTacToe main) {
 		super(30);
 		this.main = main;
 		setAlignment(Pos.CENTER);
 		wm = new StyledLabel("Main Menu");
-		pvc = new Button("Player vs. Computer");
-		pvc.setOnAction(e -> nextRoot(GameMode.VS_COMPUTER));
+		pve = new Button("Player vs. Computer");
+		pve.setOnAction(e -> nextRoot(GameMode.VS_COMPUTER));
 		pvp = new Button("Player vs. Player");
 		pvp.setOnAction(e -> nextRoot(GameMode.VS_PLAYER));
 		setOnlineGameButton();
@@ -28,7 +28,7 @@ public class MainMenu extends VBox {
 		exit.setOnAction(e -> main.exit());
 		settings = new Button("Settings");
 		settings.setOnAction(e -> main.getSettingsChooser().openDialog());
-		btns = new VBox(10, pvc, pvp, og, settings, exit);
+		btns = new VBox(10, pve, pvp, og, settings, exit);
 		btns.setAlignment(Pos.CENTER);
 		getChildren().addAll(wm, btns);
 		setBackground(TicTacToe.BACKGROUND);
