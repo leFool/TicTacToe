@@ -53,6 +53,12 @@ public class Network {
 		return msg;
 	}
 
+	/**
+	 * Displays an error message box
+	 * 
+	 * @param errmsg
+	 *            the error message
+	 */
 	public void error(String errmsg) {
 		error = new Alert(AlertType.ERROR);
 		error.setTitle("Networking Error");

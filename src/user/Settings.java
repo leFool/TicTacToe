@@ -17,6 +17,7 @@ import javafx.scene.control.Alert.AlertType;
 public class Settings implements User, Serializable {
 
 	private static final long serialVersionUID = 5674337691876672432L;
+	private static transient final int MAX_LOADING_TRIES = 3;
 
 	private static final String FILE_NAME = "jtttsettings.ser";
 	private static final String DEFAULT_PLAYER_1_NAME = "Player 1";
@@ -31,10 +32,11 @@ public class Settings implements User, Serializable {
 	protected String player1Name, player2Name, compName, onlineName;
 	protected GameDifficulty gd;
 
-	public Settings(String player1Name, String player2Name, String compName, String onlineName, GameDifficulty gd) {
+	public Settings(String player1Name, String player2Name, String compName,
+			String onlineName, GameDifficulty gd) {
 		set(player1Name, player2Name, compName, onlineName, gd);
 	}
-	
+
 	public Settings(String player1Name, String player2Name) {
 		this(player1Name, player2Name, null, null, null);
 	}
@@ -47,11 +49,12 @@ public class Settings implements User, Serializable {
 	}
 
 	public void setToDefault() {
-		set(DEFAULT_PLAYER_1_NAME, DEFAULT_PLAYER_2_NAME, DEFAULT_COMPUTER_NAME, DEFAULT_ONLINE_NAME,
-				DEFAULT_GAME_DIFFICULTY);
+		set(DEFAULT_PLAYER_1_NAME, DEFAULT_PLAYER_2_NAME, DEFAULT_COMPUTER_NAME,
+				DEFAULT_ONLINE_NAME, DEFAULT_GAME_DIFFICULTY);
 	}
 
-	public void set(String player1Name, String player2Name, String compName, String onlineName, GameDifficulty gd) {
+	public void set(String player1Name, String player2Name, String compName,
+			String onlineName, GameDifficulty gd) {
 		this.player1Name = player1Name;
 		this.player2Name = player2Name;
 		this.compName = compName;
@@ -59,6 +62,10 @@ public class Settings implements User, Serializable {
 		this.gd = gd;
 	}
 
+	/**
+	 * Loads settings from the settings file, if does not exist creates a new
+	 * file with default settings
+	 */
 	public void loadFromFile() {
 		if (!savedSettings.exists()) {
 			setToDefault();
@@ -69,7 +76,7 @@ public class Settings implements User, Serializable {
 		ObjectInputStream in = null;
 		BufferedInputStream bi = null;
 		FileInputStream fi = null;
-		while (tries++ <= 3) {
+		while (tries++ <= MAX_LOADING_TRIES) {
 			try {
 				fi = new FileInputStream(savedSettings);
 				bi = new BufferedInputStream(fi);
@@ -81,7 +88,7 @@ public class Settings implements User, Serializable {
 				onlineName = temp.onlineName;
 				gd = temp.gd;
 			} catch (Exception e) {
-				if (tries == 3) {
+				if (tries == MAX_LOADING_TRIES) {
 					error.setHeaderText("Could not load settings");
 					error.setContentText("Using default settings!");
 					setToDefault();
@@ -149,7 +156,8 @@ public class Settings implements User, Serializable {
 
 	@Override
 	public String toString() {
-		return String.format("p1 = %s, p2 = %s, c = %s, gd = %s", player1Name, player2Name, compName, gd.toString());
+		return String.format("p1 = %s, p2 = %s, c = %s, gd = %s", player1Name,
+				player2Name, compName, gd.toString());
 	}
 
 }

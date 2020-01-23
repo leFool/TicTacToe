@@ -32,6 +32,7 @@ public class Opponent extends Thread {
 		Message oppMsg;
 		isPlaying = true;
 		while (isPlaying) {
+			// skip null messages
 			while ((oppMsg = net.read()) == null)
 				if (!isPlaying)
 					return;

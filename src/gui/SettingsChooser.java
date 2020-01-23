@@ -105,19 +105,11 @@ public class SettingsChooser extends Settings {
 
 	private void buttonClicked(ActionEvent e) {
 		Button b = (Button) e.getSource();
+		// set the settings, save to file and close the SettingsChooser
 		if (b == ok) {
 			save(true);
+			applyToGame();
 			stage.hide();
-			Game g = Game.getCurrentGame(main);
-			if (g != null)
-				Game.getCurrentGame(main).updateInfo(this);
-			if (net.checkConnection()) {
-				try {
-					net.send(new Message(MessageType.NAME, onlineName));
-				} catch (IOException e1) {
-					net.error("couldn't send online name");
-				}
-			}
 		}
 		else if (b == apply)
 			save(false);
@@ -129,6 +121,19 @@ public class SettingsChooser extends Settings {
 			stage.hide();
 	}
 
+	private void applyToGame() {
+		Game g = Game.getCurrentGame(main);
+		if (g != null)
+			Game.getCurrentGame(main).updateInfo(this);
+		if (net.checkConnection()) {
+			try {
+				net.send(new Message(MessageType.NAME, onlineName));
+			} catch (IOException e1) {
+				net.error("couldn't send online name");
+			}
+		}
+	}
+
 	public void load() {
 		player1TextFiled.setText(player1Name);
 		player2TextFiled.setText(player2Name);
@@ -137,6 +142,13 @@ public class SettingsChooser extends Settings {
 		difficulty.setValue(gd.toString());
 	}
 
+	/**
+	 * saves the settings from the text fields the instance
+	 * 
+	 * @param toFile
+	 *            should be called with true if willing to save to the settings
+	 *            file
+	 */
 	private void save(boolean toFile) {
 		set(player1TextFiled.getText(), player2TextFiled.getText(),
 				compTextFiled.getText(), onlineTextFiled.getText(),

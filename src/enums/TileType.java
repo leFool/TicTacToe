@@ -7,6 +7,7 @@ public enum TileType {
 	public char toChar() {
 		switch (this) {
 			case EMPTY:
+			case HINT:
 				return '-';
 			case X:
 				return 'X';

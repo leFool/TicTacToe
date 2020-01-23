@@ -27,8 +27,8 @@ public class Tile extends Canvas {
 		drawTile(getGraphicsContext2D());
 	}
 
-	public Tile(MatrixIndex mindex) {
-		this(100, 100, mindex);
+	public Tile(MatrixIndex matrixIndex) {
+		this(100, 100, matrixIndex);
 	}
 
 	/**
@@ -51,7 +51,7 @@ public class Tile extends Canvas {
 	}
 
 	public boolean isEmpty() {
-		return type == TileType.EMPTY;
+		return (type == TileType.EMPTY);
 	}
 
 	public boolean setType(TileType type) {

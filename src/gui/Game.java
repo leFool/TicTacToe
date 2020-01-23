@@ -69,6 +69,14 @@ public class Game extends GridPane {
 		setOpponent();
 	}
 
+	/**
+	 * Retruns the current on-going {@link Game} instance associated with
+	 * {@code main} or {@code null} if no game is being played
+	 * 
+	 * @param main
+	 *            the owner instance of the game
+	 * @return the current {@link Game} instance being played
+	 */
 	public static Game getCurrentGame(TicTacToe main) {
 		try {
 			BorderPane layout = (BorderPane) main.getLayout();
@@ -78,6 +86,9 @@ public class Game extends GridPane {
 		}
 	}
 
+	/**
+	 * Ends of the game and resets current game data
+	 */
 	public static void end() {
 		Opponent.setPlaying(false);
 		Tile.resetFilledTilesCounter();
@@ -100,9 +111,9 @@ public class Game extends GridPane {
 		for (int i = 0; i < BOARD_SIZE; i++) {
 			for (int j = 0; j < BOARD_SIZE; j++) {
 				board[i][j] = new Tile(i, j);
-				Tile temp = board[i][j];
-				temp.setOnMouseClicked(e -> move(temp));
-				add(temp, i, j);
+				Tile curr = board[i][j];
+				curr.setOnMouseClicked(e -> move(curr));
+				add(curr, i, j);
 			}
 		}
 	}
@@ -140,6 +151,12 @@ public class Game extends GridPane {
 		new Opponent(main, this);
 	}
 
+	/**
+	 * Updates current game intformation
+	 * 
+	 * @param settings
+	 *            the settings of the current game
+	 */
 	public void updateInfo(Settings settings) {
 		if (settings != null)
 			user = settings;

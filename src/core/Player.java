@@ -17,11 +17,16 @@ public class Player {
 		isComp = (index == COMPUTER);
 		setType();
 	}
-	
+
 	public int getIndex() {
 		return index;
 	}
-	
+
+	/**
+	 * Returns the TileType of the player
+	 * 
+	 * @return the TileType of the player
+	 */
 	public TileType getPlayerTileType() {
 		return playerTileType;
 	}
@@ -29,7 +34,12 @@ public class Player {
 	private void setType() {
 		playerTileType = (index == PLAYER_1) ? TileType.X : TileType.O;
 	}
-	
+
+	/**
+	 * Checks if the this player instance if a Computer
+	 * 
+	 * @return {@code true} if this player instance represents a computer
+	 */
 	public boolean isComp() {
 		return isComp;
 	}
@@ -37,5 +47,5 @@ public class Player {
 	public void switchPlayerType() {
 		playerTileType = (playerTileType == TileType.X) ? TileType.O : TileType.X;
 	}
-	
+
 }
