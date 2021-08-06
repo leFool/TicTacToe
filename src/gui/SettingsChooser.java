@@ -27,9 +27,8 @@ public class SettingsChooser extends Settings {
 	private static final long serialVersionUID = -6460486954356247550L;
 
 	private transient Button ok, apply, toDefault, cancel;
-	private transient TextField player1TextFiled, player2TextFiled, compTextFiled,
-			onlineTextFiled;
-	private transient Label lp1, lp2, lcomp, lo, ldiff, info;
+	private transient TextField player1TextFiled, player2TextFiled, compTextFiled, onlineTextFiled;
+	private transient Label lp1, lp2, lcomp, lo, ldiff;
 	private transient ChoiceBox<String> difficulty;
 	private transient GridPane root;
 	private transient Stage stage;
@@ -53,9 +52,8 @@ public class SettingsChooser extends Settings {
 	}
 
 	private void setRoot() {
-		Node[][] childs = { { lp1, player1TextFiled }, { lp2, player2TextFiled },
-				{ lcomp, compTextFiled }, { lo, onlineTextFiled },
-				{ ldiff, difficulty } };
+		Node[][] childs = { { lp1, player1TextFiled }, { lp2, player2TextFiled }, { lcomp, compTextFiled },
+				{ lo, onlineTextFiled }, { ldiff, difficulty } };
 		root = new GridPane();
 		root.setAlignment(Pos.CENTER);
 		root.setHgap(10);
@@ -66,9 +64,8 @@ public class SettingsChooser extends Settings {
 				root.add(childs[i][j], j, i);
 		HBox btns = new HBox(10, ok, apply, toDefault, cancel);
 		btns.setAlignment(Pos.CENTER);
-		root.getChildren().addAll(btns, info);
-		GridPane.setConstraints(btns, 0, i++, 2, 1);
-		GridPane.setConstraints(info, 0, i, 2, 1);
+		root.getChildren().add(btns);
+		GridPane.setConstraints(btns, 0, i, 2, 1);
 	}
 
 	private void setLabels() {
@@ -77,7 +74,6 @@ public class SettingsChooser extends Settings {
 		lcomp = new Label("Computer name");
 		lo = new Label("Online name");
 		ldiff = new Label("Difficulty");
-		info = new Label("*online name cannot be changed mid-game");
 	}
 
 	private void setFields() {
@@ -105,11 +101,19 @@ public class SettingsChooser extends Settings {
 
 	private void buttonClicked(ActionEvent e) {
 		Button b = (Button) e.getSource();
-		// set the settings, save to file and close the SettingsChooser
 		if (b == ok) {
 			save(true);
-			applyToGame();
 			stage.hide();
+			Game g = Game.getCurrentGame(main);
+			if (g != null)
+				Game.getCurrentGame(main).updateInfo(this);
+			if (net.checkConnection()) {
+				try {
+					net.send(new Message(MessageType.NAME, onlineName));
+				} catch (IOException e1) {
+					net.error("couldn't send online name");
+				}
+			}
 		}
 		else if (b == apply)
 			save(false);
@@ -121,19 +125,6 @@ public class SettingsChooser extends Settings {
 			stage.hide();
 	}
 
-	private void applyToGame() {
-		Game g = Game.getCurrentGame(main);
-		if (g != null)
-			Game.getCurrentGame(main).updateInfo(this);
-		if (net.checkConnection()) {
-			try {
-				net.send(new Message(MessageType.NAME, onlineName));
-			} catch (IOException e1) {
-				net.error("couldn't send online name");
-			}
-		}
-	}
-
 	public void load() {
 		player1TextFiled.setText(player1Name);
 		player2TextFiled.setText(player2Name);
@@ -142,16 +133,8 @@ public class SettingsChooser extends Settings {
 		difficulty.setValue(gd.toString());
 	}
 
-	/**
-	 * saves the settings from the text fields the instance
-	 * 
-	 * @param toFile
-	 *            should be called with true if willing to save to the settings
-	 *            file
-	 */
 	private void save(boolean toFile) {
-		set(player1TextFiled.getText(), player2TextFiled.getText(),
-				compTextFiled.getText(), onlineTextFiled.getText(),
+		set(player1TextFiled.getText(), player2TextFiled.getText(), compTextFiled.getText(), onlineTextFiled.getText(),
 				GameDifficulty.valueOf(difficulty.getValue()));
 		if (toFile)
 			saveToFile();
